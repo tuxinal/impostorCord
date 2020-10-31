@@ -36,3 +36,10 @@ after all of that you should be able to start the server by opening Impostor.Ser
 | join      | j     | join <color>                            | join user as specified color                                                       |
 | forcejoin | fj    | forcejoin <color> <user to force join>  | join specified user to specified color  (mention specified user)                   |
 | kick      | k     | kick <color>                            | clears user data from specified color                                              |
+
+## Credits
+[Impostor](https://github.com/impostor/Impostor) for obvious reasons
+
+[DSharpPlus](https://github.com/DSharpPlus/DSharpPlus) for C# discord api
+
+[Amongcord](https://github.com/pedrofracassi/amongcord) as this project's functionality and commands are heavily inspired by amongcord
