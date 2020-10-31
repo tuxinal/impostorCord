@@ -48,6 +48,8 @@ then do `dotnet build` and then do `dotnet publish` after this all of the files 
 
 Note: this will make the debug version to make the release version add `-c Release` to the  end of the second and third command
 
+also reading the Impostor plugin docs may be helpful: https://github.com/Impostor/Impostor/blob/dev/docs/Writing-a-plugin.md
+
 ## Credits
 [Impostor](https://github.com/impostor/Impostor) for obvious reasons i hope
 
