@@ -13,7 +13,7 @@ namespace Impostor.Plugins.ImpostorCord
         package: "com.Tuxinal.ImpostorCord",
         name: "ImpostorCord",
         author: "Tuxinal",
-        version: "0.0.5")]
+        version: "0.1.0")]
     public class ImpostorCord : PluginBase
     {
         private readonly ILogger<ImpostorCord> _logger;
