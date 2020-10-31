@@ -44,7 +44,7 @@ add the DSharpPlus SlimGet repo ([here is how](https://dsharpplus.github.io/arti
 
 do a `dotnet restore` in the projects root
 
-then do `dotnet build` and then do `dotnet publish` after this all of the files should be the correct files in `bin/Debug/<project framework>/publish/`
+then do `dotnet build` and then do `dotnet publish` after this all of the files should be in `bin/Debug/<project framework>/publish/`
 
 Note: this will make the debug version to make the release version add `-c Release` to the  end of the second and third command
 
