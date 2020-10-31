@@ -37,8 +37,19 @@ after all of that you should be able to start the server by opening Impostor.Ser
 | forcejoin | fj    | forcejoin <color> <user to force join>  | join specified user to specified color  (mention specified user)                   |
 | kick      | k     | kick <color>                            | clears user data from specified color                                              |
 
+## Compiling
+(i'm assuming you use the cli)
+
+add the DSharpPlus SlimGet repo ([here is how](https://dsharpplus.github.io/articles/advanced/nightly_builds.html))
+
+do a `dotnet restore` in the projects root
+
+then do `dotnet build` and then do `dotnet publish` after this all of the files should be the correct files in `bin/Debug/<project framework>/publish/`
+
+Note: this will make the debug version to make the release version add `-c Release` to the  end of the second and third command
+
 ## Credits
-[Impostor](https://github.com/impostor/Impostor) for obvious reasons
+[Impostor](https://github.com/impostor/Impostor) for obvious reasons i hope
 
 [DSharpPlus](https://github.com/DSharpPlus/DSharpPlus) for C# discord api
 
