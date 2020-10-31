@@ -1,0 +1,6 @@
+{
+    "token": "<TOKEN>",
+    "prefix": ";",
+    "botProxyEnabled": false,
+    "botProxyAddress": ""
+}
