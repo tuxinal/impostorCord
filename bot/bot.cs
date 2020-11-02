@@ -5,6 +5,7 @@ using DSharpPlus.Entities;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Net;
+using System;
 
 namespace Impostor.Plugins.ImpostorCord.Discord
 {
@@ -60,8 +61,9 @@ namespace Impostor.Plugins.ImpostorCord.Discord
 
             await client.ConnectAsync();
         }
-        public static async Task Tasks(string code)
+        public static async Task Tasks(string code,int delay)
         {
+            await Task.Delay(TimeSpan.FromSeconds(delay));
             foreach (Player player in games[code].players)
             {
                 if (player.uid != null)
