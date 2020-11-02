@@ -24,28 +24,31 @@ namespace Impostor.Plugins.ImpostorCord
             string configFile = File.ReadAllText("./config.impostorCord.json");
             var config = JsonSerializer.Deserialize<Config>(configFile);
             string proxyAddress;
-            if(!config.BotProxyEnabled){
+            if (!config.BotProxyEnabled)
+            {
                 proxyAddress = null;
-            } else {
+            }
+            else
+            {
                 proxyAddress = config.BotProxyAddress;
             }
-            _bot = new Bot(config.Token , config.Prefix, proxyAddress);
-            eventManager.RegisterListener(new GameEventListener (logger,_bot));
+            _bot = new Bot(config.Token, config.Prefix, proxyAddress);
+            eventManager.RegisterListener(new GameEventListener(logger, _bot));
         }
 
     }
     public class Config
     {
         [JsonPropertyName("token")]
-        public string Token { get; set; } 
+        public string Token { get; set; }
 
         [JsonPropertyName("prefix")]
-        public string Prefix { get; set; } 
+        public string Prefix { get; set; }
 
         [JsonPropertyName("botProxyEnabled")]
-        public bool BotProxyEnabled { get; set; } 
+        public bool BotProxyEnabled { get; set; }
 
         [JsonPropertyName("botProxyAddress")]
-        public string BotProxyAddress { get; set; } 
+        public string BotProxyAddress { get; set; }
     }
 }

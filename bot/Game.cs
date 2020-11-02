@@ -18,10 +18,14 @@ namespace Impostor.Plugins.ImpostorCord.Discord
             new Player(), // brown
             new Player(), // cyan
             new Player()}; //lime
-        public bool noVC(){
-            if(voiceChannel == null){
+        public bool noVC()
+        {
+            if (voiceChannel == null)
+            {
                 return true;
-            } else {
+            }
+            else
+            {
                 return false;
             }
         }
