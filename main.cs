@@ -32,7 +32,7 @@ namespace Impostor.Plugins.ImpostorCord
             {
                 proxyAddress = config.BotProxyAddress;
             }
-            _bot = new Bot(config.Token, config.Prefix, proxyAddress);
+            _bot = new Bot(config.Token, config.Prefix, proxyAddress, config.BotProxyUsername, config.BotProxyPassword);
             eventManager.RegisterListener(new GameEventListener(logger, _bot));
         }
 
@@ -50,5 +50,12 @@ namespace Impostor.Plugins.ImpostorCord
 
         [JsonPropertyName("botProxyAddress")]
         public string BotProxyAddress { get; set; }
+
+        [JsonPropertyName("botProxyUsername")]
+        public string BotProxyUsername { get; set; }
+
+        [JsonPropertyName("botProxyPassword")]
+        public string BotProxyPassword { get; set; }
+
     }
 }

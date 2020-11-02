@@ -2,5 +2,7 @@
     "token": "<TOKEN>",
     "prefix": ";",
     "botProxyEnabled": false,
-    "botProxyAddress": ""
+    "botProxyAddress": "",
+    "botProxyUsername": "",
+    "botProxyPassword": ""
 }
