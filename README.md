@@ -12,12 +12,13 @@ get the latest release from the releases page and put the contents of the zip in
 
 this is what your direvctory should look like:<br>
 
-├── Impostor.Server(.exe)<br>
-├── config.impostorCord.json<br>
-├── config.json<br>
-└── plugins<br>
-&nbsp;&nbsp;├── ImpostorCord.dll<br>
-&nbsp;&nbsp;├──(bunch of dependency files)<br>
+├─ Impostor.Server(.exe)<br>
+├─ config.impostorCord.json<br>
+├─ config.json<br>
+├─ libraries<br>
+&nbsp;&nbsp;└─(bunch of dependency files)<br>
+└─ plugins<br>
+&nbsp;&nbsp;└─ ImpostorCord.dll<br>
 
 you also need a discord bot token and there are many guides on the internet about how to do that so im not gonna get in to it here
 
