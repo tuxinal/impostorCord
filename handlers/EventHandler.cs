@@ -30,7 +30,7 @@ namespace Impostor.Plugins.ImpostorCord.Handlers
         [EventListener]
         public async void OnMeetingEnded(IMeetingEndedEvent e)
         {
-            await Bot.Tasks(e.Game.Code.Code, 15);
+            await Bot.Tasks(e.Game.Code.Code, 10);
         }
         [EventListener]
         public async void OnGameStarted(IGameStartedEvent e)
