@@ -30,6 +30,12 @@ namespace Impostor.Plugins.ImpostorCord.Handlers
         [EventListener]
         public async void OnMeetingEnded(IMeetingEndedEvent e)
         {
+            foreach (var player in e.Game.Players)
+            {
+                if(player.Character.PlayerInfo.IsDead){
+                    Bot.games[e.Game.Code.Code].players[player.Character.PlayerInfo.ColorId].isDead = true;
+                }
+            }
             await Bot.Tasks(e.Game.Code.Code, 10);
         }
         [EventListener]
