@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Logging;
 using Impostor.Api.Events;
 using Impostor.Api.Events.Meeting;
+using Impostor.Api.Events.Player;
 using Impostor.Plugins.ImpostorCord.Discord;
 
 
@@ -30,12 +31,6 @@ namespace Impostor.Plugins.ImpostorCord.Handlers
         [EventListener]
         public async void OnMeetingEnded(IMeetingEndedEvent e)
         {
-            foreach (var player in e.Game.Players)
-            {
-                if(player.Character.PlayerInfo.IsDead){
-                    Bot.games[e.Game.Code.Code].players[player.Character.PlayerInfo.ColorId].isDead = true;
-                }
-            }
             await Bot.Tasks(e.Game.Code.Code, 10);
         }
         [EventListener]
@@ -59,6 +54,10 @@ namespace Impostor.Plugins.ImpostorCord.Handlers
         public void OnGameDestroyed(IGameDestroyedEvent e)
         {
             Bot.games.Remove(e.Game.Code.Code);
+        }
+        [EventListener]
+        public void OnPlayerExhiled(IPlayerExileEvent e){
+            Bot.games[e.Game.Code.Code].players[e.PlayerControl.PlayerInfo.ColorId].isDead = true;
         }
 
     }
