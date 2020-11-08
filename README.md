@@ -1,3 +1,4 @@
+**NOTE: due to a bug in among us people who are voted out won't be counted as dead**
 # impostorCord
 [Impostor](https://github.com/impostor/Impostor) is a self hostable among us server that also has plugin support
 
