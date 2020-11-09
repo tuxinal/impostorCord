@@ -41,7 +41,7 @@ after all of that you should be able to start the server by opening Impostor.Ser
 ## Compiling
 (i'm assuming you use the cli)
 
-add the DSharpPlus SlimGet repo ([here is how](https://dsharpplus.github.io/articles/advanced/nightly_builds.html))
+add the DSharpPlus SlimGet repo ([here is how](https://dsharpplus.github.io/articles/misc/nightly_builds.html))
 
 do a `dotnet restore` in the projects root
 
