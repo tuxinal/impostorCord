@@ -16,16 +16,21 @@ namespace Impostor.Plugins.ImpostorCord.Discord
         public static DiscordClient client;
         static CommandsNextExtension commands;
         static private WebProxy _proxy;
-        static private ICredentials credentials;
-        public Bot(string token, string prefix, string proxy,string proxyUserName,string proxyPassword)
+        public static Config config;
+        public Bot(Config _config)
         {
-            credentials = new NetworkCredential(proxyUserName,proxyPassword);
-            _proxy = new WebProxy(proxy);
-            _proxy.Credentials = credentials;
-            MainAsync(token).ConfigureAwait(false).GetAwaiter().GetResult();
+            config=_config;
+
+            if (config.BotProxyEnabled)
+            {
+                _proxy = new WebProxy(config.BotProxyAddress);
+                _proxy.Credentials = new NetworkCredential(config.BotProxyUsername, config.BotProxyPassword);;
+            }
+
+            MainAsync(config.Token).ConfigureAwait(false).GetAwaiter().GetResult();
             commands = client.UseCommandsNext(new CommandsNextConfiguration
             {
-                StringPrefixes = new string[] { prefix }
+                StringPrefixes = new string[] { config.Prefix }
             });
             commands.RegisterCommands<MyCommands>();
         }
