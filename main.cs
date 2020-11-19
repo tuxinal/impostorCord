@@ -53,5 +53,9 @@ namespace Impostor.Plugins.ImpostorCord
 
         [JsonPropertyName("extraSecondsOfTalkAfterMeeting")]
         public uint ExtraSecondsOfTalkAfterMeeting { get; set; }
+
+        [JsonPropertyName("deadСanTalkDuringTasks")]
+        public bool DeadСanTalkDuringTasks { get; set; }
+
     }
 }

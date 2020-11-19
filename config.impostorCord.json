@@ -7,4 +7,5 @@
     "botProxyPassword": ""
 
     ,"extraSecondsOfTalkAfterMeeting": 10
+    ,"deadСanTalkDuringTasks": true
 }
