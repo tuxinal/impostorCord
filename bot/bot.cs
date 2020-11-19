@@ -34,6 +34,38 @@ namespace Impostor.Plugins.ImpostorCord.Discord
             });
             commands.RegisterCommands<MyCommands>();
         }
+
+        static async Task MuteDiscordMember(Player player, bool needMute)
+        {
+            if(player.uid == null) return;
+            try
+            {
+                if(player.game.DeadСanTalkDuringTasks)
+                {
+                    needMute ^= player.isDead; // mute dead + unmute alive or vice versa
+                    var needDeaf = !player.isDead & needMute; // deaf only alive
+                    if(needDeaf != player.isDeaf)
+                    {
+                        player.isDeaf = needDeaf;
+                        await player.uid.SetDeafAsync(needDeaf);
+                    }
+                }
+                else
+                {
+                    needMute |= player.isDead; // mute all ; unmute only alive
+                }
+
+                if(needMute != player.isMute)
+                {
+                    player.isMute = needMute;
+                    await player.uid.SetMuteAsync(needMute);
+                }
+
+            } catch
+            { // TODO better log
+                System.Console.WriteLine("! Exception in Discord API method");
+            }
+        }
         static async Task MainAsync(string token)
         {
             client = new DiscordClient(new DiscordConfiguration { Token = token, TokenType = TokenType.Bot, Proxy = _proxy });
@@ -48,17 +80,16 @@ namespace Impostor.Plugins.ImpostorCord.Discord
                         { //checking through all games to find the one connected to the vc
                             DiscordMember member = e.Before.User as DiscordMember; // cast iscordUser to Member because member has a lot more control
                             DiscordChannel startChannel = game.Value.gameStartingChannel; // get the channel that the game started from
-                            int count = 0;
+
                             foreach (Player player in game.Value.players)
                             { //getting through each player to find the one connected to the member
                                 if (player.uid == member)
                                 {
-                                    games[game.Key].players[count].uid = null;
-                                    await member.SetDeafAsync(false);
-                                    await member.SetMuteAsync(false); // unmute and undeafen
+                                    player.isDead = false;
+                                    await MuteDiscordMember(player, false);
+                                    player.uid = null;
                                     await startChannel.SendMessageAsync($"{member.Mention} has left");
                                 }
-                                count++;
                             }
                         }
                     }
@@ -73,56 +104,34 @@ namespace Impostor.Plugins.ImpostorCord.Discord
         {
             foreach (Player player in games[code].players)
             {
-                if (player.uid != null)
-                {
-                    if (!player.isDead)
-                    {
-                        await player.uid.SetDeafAsync(true);
-                        await player.uid.SetMuteAsync(true);
-                    }
-                    else
-                    {
-                        await player.uid.SetDeafAsync(false);
-                        await player.uid.SetMuteAsync(false);
+                if (player.uid == null)
+                    continue;
 
-                    }
-                }
+                MuteDiscordMember(player, true);
             }
         }
         public static async Task Lobby(string code)
         {
-            int count = 0;
+
             foreach (Player player in games[code].players)
             {
-                games[code].players[count].isDead = false;
-                if (player.uid != null)
-                {
-                    await player.uid.SetMuteAsync(false);
-                    await player.uid.SetDeafAsync(false);
-                }
-                count++;
+                player.isDead = false;
+
+                if (player.uid == null)
+                    continue;
+
+                MuteDiscordMember(player, false);
             }
         }
         public static async Task Meeting(string code)
         {
-            int count = 0;
+
             foreach (Player player in games[code].players)
             {
-                if (player.uid != null)
-                {
-                    if (!player.isDead)
-                    {
-                        await player.uid.SetMuteAsync(false);
-                        await player.uid.SetDeafAsync(false);
-                    }
-                    else
-                    {
-                        await player.uid.SetMuteAsync(true);
-                        await player.uid.SetDeafAsync(false);
+                if (player.uid == null)
+                    continue;
 
-                    }
-                }
-                count++;
+                MuteDiscordMember(player, false);
             }
         }
     }

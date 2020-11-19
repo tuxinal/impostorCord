@@ -41,6 +41,8 @@ namespace Impostor.Plugins.ImpostorCord.Discord
     public class Player
     {
         public bool isDead = false;
+        public bool isMute = false;
+        public bool isDeaf = false;
         public DiscordMember uid;
         public Game game;
         public Player(Game game) {
