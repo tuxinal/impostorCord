@@ -28,6 +28,7 @@ namespace Impostor.Plugins.ImpostorCord.Discord
                             gameFound = true;
                             Bot.games[game.Key].players[colorIndex].uid = ctx.Member;
                             await ctx.RespondAsync($"{ctx.Member.Mention} is joined as {colors[colorIndex]}");
+                            break;
                         }
                     }
                     if (!gameFound)
@@ -133,6 +134,7 @@ namespace Impostor.Plugins.ImpostorCord.Discord
                             gameFound = true;
                             Bot.games[game.Key].players[colorIndex].uid = member;
                             await ctx.RespondAsync($"{member.Mention} is joined as {colors[colorIndex]}");
+                            break;
                         }
                     }
                     if (!gameFound)
@@ -167,6 +169,7 @@ namespace Impostor.Plugins.ImpostorCord.Discord
                             gameFound = true;
                             Bot.games[game.Key].players[colorIndex].uid = null;
                             await ctx.RespondAsync($"Cleared memberdata from {colors[colorIndex]}");
+                            break;
                         }
                     }
                     if (!gameFound)
