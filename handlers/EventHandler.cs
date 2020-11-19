@@ -54,7 +54,7 @@ namespace Impostor.Plugins.ImpostorCord.Handlers
         [EventListener]
         public void OnGameCreated(IGameCreatedEvent e)
         {
-            Bot.games.Add(e.Game.Code.Code,new Game());
+            Bot.games.Add(e.Game.Code.Code,new Game {DeadСanTalkDuringTasks=Bot.config.DeadСanTalkDuringTasks} );
         }
         [EventListener]
         public void OnGameDestroyed(IGameDestroyedEvent e)
