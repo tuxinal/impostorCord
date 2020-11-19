@@ -26,17 +26,23 @@ namespace Impostor.Plugins.ImpostorCord.Handlers
                     Bot.games[e.Game.Code.Code].players[player.Character.PlayerInfo.ColorId].isDead = true;
                 }
             }
-            await Bot.Meeting(e.Game.Code.Code); 
+            await Bot.Meeting(e.Game.Code.Code);
         }
         [EventListener]
         public async void OnMeetingEnded(IMeetingEndedEvent e)
         {
-            await Bot.Tasks(e.Game.Code.Code, 10);
+            if(Bot.config.ExtraSecondsOfTalkAfterMeeting>0)
+            {
+                await System.Threading.Tasks.Task.Delay(System.TimeSpan.FromSeconds(Bot.config.ExtraSecondsOfTalkAfterMeeting));
+            }
+
+            if(e.Game.GameState==Api.Innersloth.GameStates.Started)
+                await Bot.Tasks(e.Game.Code.Code);
         }
         [EventListener]
         public async void OnGameStarted(IGameStartedEvent e)
         {
-            await Bot.Tasks(e.Game.Code.Code, 0);
+            await Bot.Tasks(e.Game.Code.Code);
 
         }
 

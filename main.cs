@@ -51,5 +51,7 @@ namespace Impostor.Plugins.ImpostorCord
         [JsonPropertyName("botProxyPassword")]
         public string BotProxyPassword { get; set; }
 
+        [JsonPropertyName("extraSecondsOfTalkAfterMeeting")]
+        public uint ExtraSecondsOfTalkAfterMeeting { get; set; }
     }
 }

@@ -69,9 +69,8 @@ namespace Impostor.Plugins.ImpostorCord.Discord
 
             await client.ConnectAsync();
         }
-        public static async Task Tasks(string code,int delay)
+        public static async Task Tasks(string code)
         {
-            await Task.Delay(TimeSpan.FromSeconds(delay));
             foreach (Player player in games[code].players)
             {
                 if (player.uid != null)
