@@ -33,11 +33,11 @@ after all of that you should be able to start the server by opening Impostor.Ser
 | command   | alias | syntax                                  | usage                                                                              |
 |-----------|-------|-----------------------------------------|------------------------------------------------------------------------------------|
 | help      | -     | help <optional:command name>            | provides help about commands and their syntax                                      |
-| newgame   | ng    | newgame <game code>                     | connects specified game to a voice chat                                            |
-| endgame   | eg    | endgame <game code>                     | disconnects specified game from a voice chat  (user must be in related voice chat) |
-| join      | j     | join <color>                            | join user as specified color                                                       |
-| forcejoin | fj    | forcejoin <color> <user to force join>  | join specified user to specified color  (mention specified user)                   |
-| kick      | k     | kick <color>                            | clears user data from specified color                                              |
+| newgame   | ng    | newgame <game code\>                     | connects specified game to a voice chat                                            |
+| endgame   | eg    | endgame <game code\>                     | disconnects specified game from a voice chat  (user must be in related voice chat) |
+| join      | j     | join <color\>                            | join user as specified color                                                       |
+| forcejoin | fj    | forcejoin <color> <user to force join\>  | join specified user to specified color  (mention specified user)                   |
+| kick      | k     | kick <color\>                            | clears user data from specified color                                              |
 | deadtalk  | dt    | deadtalk <true/false>                   | allow dead players to talk during tasks or not                                     |
 | players   | p     | players                                 | list all players in the current game                                               |
 ## Compiling
