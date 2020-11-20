@@ -47,9 +47,7 @@ if you are on linux you can just run the `build.sh` script like
 #or
 ./build.sh release
 ```
-and it will create the files for you in `bin/<Debug\Release>/net5.0/publish`
-
-and put those files in the root directory of your server (as explained in [usage](#Usage))
+and it will create the files for you in `bin/<Debug\Release>/net5.0/publish/`, put those files in the root directory of your server (as explained in [usage](#Usage))
 
 on windows assuming you are using the cli these are the commands you should run in order:
 
