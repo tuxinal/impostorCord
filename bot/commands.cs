@@ -56,11 +56,18 @@ namespace Impostor.Plugins.ImpostorCord.Discord
                 {
                     try
                     {
-                        if (Bot.games[code].noVC())
+                        var game = Bot.games[code];
+                        if (game.noVC())
                         {
-                            Bot.games[code].voiceChannel = ctx.Member.VoiceState.Channel;
-                            Bot.games[code].gameStartingChannel = ctx.Channel;
-                            await ctx.RespondAsync($"connected game {code} to vc {ctx.Member.VoiceState.Channel.Name}");
+                            game.voiceChannel = ctx.Member.VoiceState.Channel;
+                            game.gameStartingChannel = ctx.Channel;
+
+                            game.startMessage = await ctx.RespondAsync(null, false, Bot.buildMessage(code, game.voiceChannel.Name, game.players));
+
+                            foreach(var emoji in Bot.EmojiList)
+                            {
+                                await game.startMessage.CreateReactionAsync(DiscordEmoji.FromUnicode(emoji));
+                            }
                         }
                         else
                         {
@@ -85,7 +92,7 @@ namespace Impostor.Plugins.ImpostorCord.Discord
         [Command("endgame")]
         [Aliases("eg")]
         [Description("disconnect game from current vc")]
-        public async Task endgame(CommandContext ctx,[Description("your game code i.e. GHBNEQ")] string code)
+        public async Task endgame(CommandContext ctx,[Description("your game code i.e. `GHBNEQ`")] string code)
         {
             if (ctx.Member?.VoiceState?.Channel != null)
             {
@@ -93,9 +100,12 @@ namespace Impostor.Plugins.ImpostorCord.Discord
                 {
                     try
                     {
-                        if (Bot.games[code].voiceChannel == ctx.Member.VoiceState.Channel)
+                        var game = Bot.games[code];
+                        if (game.voiceChannel == ctx.Member.VoiceState.Channel)
                         {
-                            Bot.games[code].voiceChannel = null;
+                            game.voiceChannel = null;
+                            await game.startMessage.DeleteAsync();
+                            game.startMessage = null;
                             await ctx.RespondAsync($"ended game {code}");
                         }
                         else

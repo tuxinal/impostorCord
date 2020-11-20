@@ -6,6 +6,7 @@ namespace Impostor.Plugins.ImpostorCord.Discord
     {
         public DiscordChannel gameStartingChannel; // storing the channel that the game started in
         public DiscordChannel voiceChannel;
+        public DiscordMessage startMessage;
         public Player[] players;
         public bool noVC()
         {
