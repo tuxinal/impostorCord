@@ -28,6 +28,7 @@ namespace Impostor.Plugins.ImpostorCord.Discord
                             gameFound = true;
                             Bot.games[game.Key].players[colorIndex].uid = ctx.Member;
                             await ctx.RespondAsync($"{ctx.Member.Mention} is joined as {colors[colorIndex]}");
+                            break;
                         }
                     }
                     if (!gameFound)
@@ -133,6 +134,7 @@ namespace Impostor.Plugins.ImpostorCord.Discord
                             gameFound = true;
                             Bot.games[game.Key].players[colorIndex].uid = member;
                             await ctx.RespondAsync($"{member.Mention} is joined as {colors[colorIndex]}");
+                            break;
                         }
                     }
                     if (!gameFound)
@@ -167,6 +169,7 @@ namespace Impostor.Plugins.ImpostorCord.Discord
                             gameFound = true;
                             Bot.games[game.Key].players[colorIndex].uid = null;
                             await ctx.RespondAsync($"Cleared memberdata from {colors[colorIndex]}");
+                            break;
                         }
                     }
                     if (!gameFound)
@@ -183,6 +186,36 @@ namespace Impostor.Plugins.ImpostorCord.Discord
             {
                 await ctx.RespondAsync("Invalid color!");
             }
+        }
+        [Command("deadtalk")]
+        [Aliases("dt")]
+        public async Task deadtalk(CommandContext ctx, bool deadCanTalk)
+        {
+
+            if (ctx.Member?.VoiceState?.Channel != null)
+            {
+                bool gameFound = false;
+                foreach (KeyValuePair<string, Game> game in Bot.games)
+                {
+                    if (game.Value.voiceChannel == ctx.Member.VoiceState.Channel)
+                    {
+                        gameFound = true;
+                        game.Value.DeadСanTalkDuringTasks = deadCanTalk;
+
+                        await ctx.RespondAsync($"Dead players can talk during tasks in game `{game.Key}` is "+ (deadCanTalk ?"*Enabled*" :"*Disabled*"));
+                        break;
+                    }
+                }
+                if (!gameFound)
+                {
+                    await ctx.RespondAsync("could not find a game in that voice channel");
+                }
+            }
+            else
+            {
+                await ctx.RespondAsync("you aren't in a voice channel!");
+            }
+
         }
     }
 }

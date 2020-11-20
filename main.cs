@@ -18,21 +18,15 @@ namespace Impostor.Plugins.ImpostorCord
     {
         private readonly ILogger<ImpostorCord> _logger;
         private Bot _bot;
+
+        private readonly Config config;
         public ImpostorCord(ILogger<ImpostorCord> logger, IEventManager eventManager)
         {
             _logger = logger;
             string configFile = File.ReadAllText("./config.impostorCord.json");
-            var config = JsonSerializer.Deserialize<Config>(configFile);
-            string proxyAddress;
-            if (!config.BotProxyEnabled)
-            {
-                proxyAddress = null;
-            }
-            else
-            {
-                proxyAddress = config.BotProxyAddress;
-            }
-            _bot = new Bot(config.Token, config.Prefix, proxyAddress, config.BotProxyUsername, config.BotProxyPassword);
+            config = JsonSerializer.Deserialize<Config>(configFile);
+
+            _bot = new Bot(config);
             eventManager.RegisterListener(new GameEventListener(logger, _bot));
         }
 
@@ -56,6 +50,12 @@ namespace Impostor.Plugins.ImpostorCord
 
         [JsonPropertyName("botProxyPassword")]
         public string BotProxyPassword { get; set; }
+
+        [JsonPropertyName("extraSecondsOfTalkAfterMeeting")]
+        public uint ExtraSecondsOfTalkAfterMeeting { get; set; }
+
+        [JsonPropertyName("deadСanTalkDuringTasks")]
+        public bool DeadСanTalkDuringTasks { get; set; }
 
     }
 }
