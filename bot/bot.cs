@@ -73,8 +73,8 @@ namespace Impostor.Plugins.ImpostorCord.Discord
 
             client.VoiceStateUpdated += async (DiscordClient client, VoiceStateUpdateEventArgs e) => //making sure to disconnect someone from their player when they leave the vc
             {
-                if (e.Before.Channel != null && e.After.Channel == null)
-                { // if they were in a channel BEFORE and they are not in a channel AFTER
+                if (e.Before.Channel != e.After.Channel)
+                { 
                     foreach (KeyValuePair<string, Game> game in games)
                     {
                         if (game.Value.voiceChannel == e.Before.Channel)
