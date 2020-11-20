@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+dotnet restore
 if [[ $1 == "release" ]]; then
     rm -r bin/Release/net5.0/publish
     dotnet build -c Release
