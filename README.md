@@ -39,15 +39,26 @@ after all of that you should be able to start the server by opening Impostor.Ser
 | kick      | k     | kick <color>                            | clears user data from specified color                                              |
 
 ## Compiling
-(i'm assuming you use the cli)
-
 add the DSharpPlus SlimGet repo ([here is how](https://dsharpplus.github.io/articles/misc/nightly_builds.html))
 
-do a `dotnet restore` in the projects root
+if you are on linux you can just run the `build.sh` script like
+```bash
+./build.sh 
+#or
+./build.sh release
+```
+and it will create the files for you in `bin/<Debug\Release>/net5.0/publish`
 
-then do `dotnet build` and then do `dotnet publish` after this all of the files should be in `bin/Debug/<project framework>/publish/`
+and put those files in the root directory of your server (as explained in [usage](#Usage))
 
-Note: this will make the debug version to make the release version add `-c Release` to the  end of the second and third command
+on windows assuming you are using the cli these are the commands you should run in order:
+
+(`-c Release` in case you want to build the release version)
+```cmd
+dotnet restore
+dotnet build (-c Release)
+dotnet publish (-c Release)
+```
 
 also reading the Impostor plugin docs may be helpful: https://github.com/Impostor/Impostor/blob/dev/docs/Writing-a-plugin.md
 
