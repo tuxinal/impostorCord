@@ -33,6 +33,7 @@ namespace Impostor.Plugins.ImpostorCord.Discord
                 StringPrefixes = new string[] { config.Prefix }
             });
             commands.RegisterCommands<MyCommands>();
+            commands.SetHelpFormatter<HelpFormatter>();
         }
 
         static async Task MuteDiscordMember(Player player, bool needMute)

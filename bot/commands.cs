@@ -13,7 +13,8 @@ namespace Impostor.Plugins.ImpostorCord.Discord
 
         [Command("join")]
         [Aliases("j")]
-        public async Task join(CommandContext ctx, string color)
+        [Description("join the game that is connected to the current vc")]
+        public async Task join(CommandContext ctx,[Description("a color from red, blue, green, pink, orange, yellow, black, white, purple and brown")] string color)
         {
             int colorIndex = Array.IndexOf(colors, color);
             if (colorIndex > -1) // check if color is part of colors
@@ -48,7 +49,8 @@ namespace Impostor.Plugins.ImpostorCord.Discord
         }
         [Command("newgame")]
         [Aliases("ng")]
-        public async Task newgame(CommandContext ctx, string code)
+        [Description("connect a game to current vc")]
+        public async Task newgame(CommandContext ctx,[Description("your game code i.e. GHBNEQ")] string code)
         {
             if (ctx.Member?.VoiceState?.Channel != null)
             {
@@ -84,7 +86,8 @@ namespace Impostor.Plugins.ImpostorCord.Discord
         }
         [Command("endgame")]
         [Aliases("eg")]
-        public async Task endgame(CommandContext ctx, string code)
+        [Description("disconnect game from current vc")]
+        public async Task endgame(CommandContext ctx,[Description("your game code i.e. GHBNEQ")] string code)
         {
             if (ctx.Member?.VoiceState?.Channel != null)
             {
@@ -119,7 +122,8 @@ namespace Impostor.Plugins.ImpostorCord.Discord
         }
         [Command("forcejoin")]
         [Aliases("fj")]
-        public async Task forcejoin(CommandContext ctx, string color, DiscordMember member)
+        [Description("join a member as color")]
+        public async Task forcejoin(CommandContext ctx,[Description("A color")] string color,[Description("mention of the member you want to join")] DiscordMember member)
         {
             int colorIndex = Array.IndexOf(colors, color);
             if (colorIndex > -1)
@@ -154,6 +158,7 @@ namespace Impostor.Plugins.ImpostorCord.Discord
         }
         [Command("kick")]
         [Aliases("k")]
+        [Description("clear specified color's member information")]
         public async Task kick(CommandContext ctx, string color)
         {
             int colorIndex = Array.IndexOf(colors, color);
@@ -189,6 +194,7 @@ namespace Impostor.Plugins.ImpostorCord.Discord
         }
         [Command("deadtalk")]
         [Aliases("dt")]
+        [Description("Disable/Enable if the dead can talk when alive players are doing tasks")]
         public async Task deadtalk(CommandContext ctx, bool deadCanTalk)
         {
 
@@ -219,6 +225,7 @@ namespace Impostor.Plugins.ImpostorCord.Discord
         }
         [Command("players")]
         [Aliases("p")]
+        [Description("list all current players")]
         public async Task players(CommandContext ctx)
         {
             if (ctx.Member?.VoiceState?.Channel != null)
