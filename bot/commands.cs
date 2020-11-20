@@ -9,14 +9,12 @@ namespace Impostor.Plugins.ImpostorCord.Discord
 {
     public class MyCommands : BaseCommandModule
     {
-        private static string[] colors = { "red", "blue", "green", "pink", "orange", "yellow", "black", "white", "purple", "brown", "cyan", "lime" };
-
         [Command("join")]
         [Aliases("j")]
         [Description("join the game that is connected to the current vc")]
-        public async Task join(CommandContext ctx,[Description("a color from red, blue, green, pink, orange, yellow, black, white, purple and brown")] string color)
+        public async Task join(CommandContext ctx,[Description("a color from red, blue, green, pink, orange, yellow, black, white, purple, brown, cyan and lime")] string color)
         {
-            int colorIndex = Array.IndexOf(colors, color);
+            int colorIndex = Array.IndexOf(Bot.InGameColors, color);
             if (colorIndex > -1) // check if color is part of colors
             {
                 if (ctx.Member?.VoiceState?.Channel != null)
@@ -28,7 +26,7 @@ namespace Impostor.Plugins.ImpostorCord.Discord
                         {
                             gameFound = true;
                             Bot.games[game.Key].players[colorIndex].uid = ctx.Member;
-                            await ctx.RespondAsync($"{ctx.Member.Mention} is joined as {colors[colorIndex]}");
+                            await ctx.RespondAsync($"{ctx.Member.Mention} is joined as *{Bot.InGameColors[colorIndex]}*");
                             break;
                         }
                     }
@@ -50,7 +48,7 @@ namespace Impostor.Plugins.ImpostorCord.Discord
         [Command("newgame")]
         [Aliases("ng")]
         [Description("connect a game to current vc")]
-        public async Task newgame(CommandContext ctx,[Description("your game code i.e. GHBNEQ")] string code)
+        public async Task newgame(CommandContext ctx,[Description("your game code i.e. `GHBNEQ`")] string code)
         {
             if (ctx.Member?.VoiceState?.Channel != null)
             {
@@ -125,7 +123,7 @@ namespace Impostor.Plugins.ImpostorCord.Discord
         [Description("join a member as color")]
         public async Task forcejoin(CommandContext ctx,[Description("A color")] string color,[Description("mention of the member you want to join")] DiscordMember member)
         {
-            int colorIndex = Array.IndexOf(colors, color);
+            int colorIndex = Array.IndexOf(Bot.InGameColors, color);
             if (colorIndex > -1)
             {
                 if (member?.VoiceState?.Channel != null)
@@ -137,7 +135,7 @@ namespace Impostor.Plugins.ImpostorCord.Discord
                         {
                             gameFound = true;
                             Bot.games[game.Key].players[colorIndex].uid = member;
-                            await ctx.RespondAsync($"{member.Mention} is joined as {colors[colorIndex]}");
+                            await ctx.RespondAsync($"{member.Mention} is joined as {Bot.InGameColors[colorIndex]}");
                             break;
                         }
                     }
@@ -161,7 +159,7 @@ namespace Impostor.Plugins.ImpostorCord.Discord
         [Description("clear specified color's member information")]
         public async Task kick(CommandContext ctx, string color)
         {
-            int colorIndex = Array.IndexOf(colors, color);
+            int colorIndex = Array.IndexOf(Bot.InGameColors, color);
             if (colorIndex > -1)
             {
                 if (ctx.Member?.VoiceState?.Channel != null)
@@ -173,7 +171,7 @@ namespace Impostor.Plugins.ImpostorCord.Discord
                         {
                             gameFound = true;
                             Bot.games[game.Key].players[colorIndex].uid = null;
-                            await ctx.RespondAsync($"Cleared memberdata from {colors[colorIndex]}");
+                            await ctx.RespondAsync($"Cleared memberdata from {Bot.InGameColors[colorIndex]}");
                             break;
                         }
                     }
@@ -209,6 +207,7 @@ namespace Impostor.Plugins.ImpostorCord.Discord
                         game.Value.DeadСanTalkDuringTasks = deadCanTalk;
 
                         await ctx.RespondAsync($"Dead players can talk during tasks in game `{game.Key}` is " + (deadCanTalk ? "*Enabled*" : "*Disabled*"));
+                        // TODO allow change in lobby only
                         break;
                     }
                 }
@@ -242,7 +241,7 @@ namespace Impostor.Plugins.ImpostorCord.Discord
                         {
                             if (player.uid != null)
                             {
-                                playersString += colors[count] + " = " + player.uid.DisplayName + "\n";
+                                playersString += Bot.InGameColors[count] + " = " + player.uid.DisplayName + "\n";
                             }
                             count++;
                         }

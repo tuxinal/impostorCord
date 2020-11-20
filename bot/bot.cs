@@ -17,6 +17,7 @@ namespace Impostor.Plugins.ImpostorCord.Discord
         static CommandsNextExtension commands;
         static private WebProxy _proxy;
         public static Config config;
+        public readonly static string[] InGameColors = { "red", "blue", "green", "pink", "orange", "yellow", "black", "white", "purple", "brown", "cyan", "lime" };
         public Bot(Config _config)
         {
             config=_config;
