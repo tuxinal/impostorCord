@@ -202,7 +202,7 @@ namespace Impostor.Plugins.ImpostorCord.Discord
                         gameFound = true;
                         game.Value.DeadСanTalkDuringTasks = deadCanTalk;
 
-                        await ctx.RespondAsync($"Dead players can talk during tasks in game `{game.Key}` is "+ (deadCanTalk ?"*Enabled*" :"*Disabled*"));
+                        await ctx.RespondAsync($"Dead players can talk during tasks in game `{game.Key}` is " + (deadCanTalk ? "*Enabled*" : "*Disabled*"));
                         break;
                     }
                 }
@@ -216,6 +216,49 @@ namespace Impostor.Plugins.ImpostorCord.Discord
                 await ctx.RespondAsync("you aren't in a voice channel!");
             }
 
+        }
+        [Command("players")]
+        [Aliases("p")]
+        public async Task players(CommandContext ctx)
+        {
+            if (ctx.Member?.VoiceState?.Channel != null)
+            {
+                bool gameFound = false;
+                foreach (KeyValuePair<string, Game> game in Bot.games)
+                {
+                    if (game.Value.voiceChannel == ctx.Member.VoiceState.Channel)
+                    {
+                        gameFound = true;
+                        string playersString = "";
+                        int count = 0;
+                        foreach (Player player in game.Value.players)
+                        {
+                            if (player.uid != null)
+                            {
+                                playersString += colors[count] + " = " + player.uid.DisplayName + "\n";
+                            }
+                            count++;
+                        }
+                        if (playersString != "")
+                        {
+                            await ctx.RespondAsync($"```{playersString}```");
+                        }
+                        else
+                        {
+                            await ctx.RespondAsync("There are no players in that game");
+                        }
+                        break;
+                    }
+                }
+                if (!gameFound)
+                {
+                    await ctx.RespondAsync("there is no game in your voice channel");
+                }
+            }
+            else
+            {
+                await ctx.RespondAsync("You need to be in a voice channel");
+            }
         }
     }
 }
