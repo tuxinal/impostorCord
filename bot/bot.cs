@@ -114,18 +114,23 @@ namespace Impostor.Plugins.ImpostorCord.Discord
 
         private static async Task MessageReactionAddedRemoved(DiscordClient s, DiscordEventArgs _e)
         {
-            bool added=false;
-            dynamic e;
-            try {
-                e = (MessageReactionAddEventArgs)_e;
-                added=true;
-            }
-            catch(InvalidCastException)
-            {
-                e = (MessageReactionRemoveEventArgs)_e;
-            }
+            (bool added, DiscordMessage Message, DiscordMember User, DiscordEmoji Emoji) e;
 
-            if(e.Message.Author!=client.CurrentUser)
+            // detect reaction was added or removed
+            if(_e is MessageReactionAddEventArgs _ea)
+            {
+                e = (true, _ea.Message, (DiscordMember)_ea.User, _ea.Emoji);
+            }
+            else if(_e is MessageReactionRemoveEventArgs _er)
+            {
+                e = (false, _er.Message, (DiscordMember)_er.User, _er.Emoji);
+            }
+            else return;
+
+            if(e.Message.Author!=s.CurrentUser
+                || (e.User).IsBot
+                || (e.User).VoiceState.Channel==null
+            )
                 return;
 
             foreach (var game in games)
@@ -133,7 +138,7 @@ namespace Impostor.Plugins.ImpostorCord.Discord
                 if (game.Value.startMessage != e.Message)
                     continue;
 
-                if (((DiscordMember)e.User).VoiceState.Channel != game.Value.voiceChannel)
+                if ((e.User).VoiceState.Channel != game.Value.voiceChannel)
                     return;
 
                 //check right emoji
@@ -142,14 +147,14 @@ namespace Impostor.Plugins.ImpostorCord.Discord
                     return;
 
                 var player = game.Value.players[eid];
-                if(added)
+                if(e.added)
                 {
                     if(player.uid==null)
-                        player.uid = (DiscordMember)e.User; // TODO only 1 color per DiscordMember
+                        player.uid = e.User; // TODO only 1 color per DiscordMember
                 }
                 else
                 {
-                    if(player.uid == (DiscordMember)e.User)
+                    if(player.uid == e.User)
                         player.uid = null;
                 }
 
