@@ -9,14 +9,12 @@ namespace Impostor.Plugins.ImpostorCord.Discord
 {
     public class MyCommands : BaseCommandModule
     {
-        private static string[] colors = { "red", "blue", "green", "pink", "orange", "yellow", "black", "white", "purple", "brown", "cyan", "lime" };
-
         [Command("join")]
         [Aliases("j")]
         [Description("join the game that is connected to the current vc")]
-        public async Task join(CommandContext ctx,[Description("a color from red, blue, green, pink, orange, yellow, black, white, purple and brown")] string color)
+        public async Task join(CommandContext ctx,[Description("a color from red, blue, green, pink, orange, yellow, black, white, purple, brown, cyan and lime")] string color)
         {
-            int colorIndex = Array.IndexOf(colors, color);
+            int colorIndex = Array.IndexOf(Bot.InGameColors, color);
             if (colorIndex > -1) // check if color is part of colors
             {
                 if (ctx.Member?.VoiceState?.Channel != null)
@@ -27,8 +25,11 @@ namespace Impostor.Plugins.ImpostorCord.Discord
                         if (game.Value.voiceChannel == ctx.Member.VoiceState.Channel)
                         {
                             gameFound = true;
-                            Bot.games[game.Key].players[colorIndex].uid = ctx.Member;
-                            await ctx.RespondAsync($"{ctx.Member.Mention} is joined as {colors[colorIndex]}");
+                            game.Value.players[colorIndex].uid = ctx.Member;
+
+                            await ctx.RespondAsync($"{ctx.Member.Mention} joined `{game.Key}` as {Bot.EmojiList[colorIndex]}*{Bot.InGameColors[colorIndex]}* himself");
+                            await game.Value.startMessage.ModifyAsync(null, Bot.buildMessage(game.Key, game.Value.voiceChannel.Name, game.Value.players));
+                            ctx.Message.DeleteAsync();
                             break;
                         }
                     }
@@ -50,7 +51,7 @@ namespace Impostor.Plugins.ImpostorCord.Discord
         [Command("newgame")]
         [Aliases("ng")]
         [Description("connect a game to current vc")]
-        public async Task newgame(CommandContext ctx,[Description("your game code i.e. GHBNEQ")] string code)
+        public async Task newgame(CommandContext ctx,[Description("your game code i.e. `GHBNEQ`")] string code)
         {
             if (ctx.Member?.VoiceState?.Channel != null)
             {
@@ -58,11 +59,19 @@ namespace Impostor.Plugins.ImpostorCord.Discord
                 {
                     try
                     {
-                        if (Bot.games[code].noVC())
+                        var game = Bot.games[code];
+                        if (game.noVC())
                         {
-                            Bot.games[code].voiceChannel = ctx.Member.VoiceState.Channel;
-                            Bot.games[code].gameStartingChannel = ctx.Channel;
-                            await ctx.RespondAsync($"connected game {code} to vc {ctx.Member.VoiceState.Channel.Name}");
+                            game.voiceChannel = ctx.Member.VoiceState.Channel;
+                            game.gameStartingChannel = ctx.Channel;
+
+                            ctx.Message.DeleteAsync();
+                            game.startMessage = await ctx.RespondAsync(null, false, Bot.buildMessage(code, game.voiceChannel.Name, game.players));
+
+                            foreach(var emoji in Bot.EmojiList)
+                            {
+                                await game.startMessage.CreateReactionAsync(DiscordEmoji.FromUnicode(emoji));
+                            }
                         }
                         else
                         {
@@ -87,7 +96,7 @@ namespace Impostor.Plugins.ImpostorCord.Discord
         [Command("endgame")]
         [Aliases("eg")]
         [Description("disconnect game from current vc")]
-        public async Task endgame(CommandContext ctx,[Description("your game code i.e. GHBNEQ")] string code)
+        public async Task endgame(CommandContext ctx,[Description("your game code i.e. `GHBNEQ`")] string code)
         {
             if (ctx.Member?.VoiceState?.Channel != null)
             {
@@ -95,10 +104,14 @@ namespace Impostor.Plugins.ImpostorCord.Discord
                 {
                     try
                     {
-                        if (Bot.games[code].voiceChannel == ctx.Member.VoiceState.Channel)
+                        var game = Bot.games[code];
+                        if (game.voiceChannel == ctx.Member.VoiceState.Channel)
                         {
-                            Bot.games[code].voiceChannel = null;
-                            await ctx.RespondAsync($"ended game {code}");
+                            game.voiceChannel = null;
+                            await game.startMessage.DeleteAsync();
+                            game.startMessage = null;
+                            await ctx.RespondAsync($"ended game `{code}` by {ctx.Member.Mention}");
+                            ctx.Message.DeleteAsync();
                         }
                         else
                         {
@@ -125,7 +138,7 @@ namespace Impostor.Plugins.ImpostorCord.Discord
         [Description("join a member as color")]
         public async Task forcejoin(CommandContext ctx,[Description("A color")] string color,[Description("mention of the member you want to join")] DiscordMember member)
         {
-            int colorIndex = Array.IndexOf(colors, color);
+            int colorIndex = Array.IndexOf(Bot.InGameColors, color);
             if (colorIndex > -1)
             {
                 if (member?.VoiceState?.Channel != null)
@@ -136,8 +149,11 @@ namespace Impostor.Plugins.ImpostorCord.Discord
                         if (game.Value.voiceChannel == member.VoiceState.Channel)
                         {
                             gameFound = true;
-                            Bot.games[game.Key].players[colorIndex].uid = member;
-                            await ctx.RespondAsync($"{member.Mention} is joined as {colors[colorIndex]}");
+                            game.Value.players[colorIndex].uid = member;
+
+                            await ctx.RespondAsync($"{member.Mention} joined `{game.Key}` as {Bot.EmojiList[colorIndex]}*{Bot.InGameColors[colorIndex]}* by {ctx.Member.Mention}");
+                            await game.Value.startMessage.ModifyAsync(null, Bot.buildMessage(game.Key, game.Value.voiceChannel.Name, game.Value.players));
+                            ctx.Message.DeleteAsync();
                             break;
                         }
                     }
@@ -161,7 +177,8 @@ namespace Impostor.Plugins.ImpostorCord.Discord
         [Description("clear specified color's member information")]
         public async Task kick(CommandContext ctx, string color)
         {
-            int colorIndex = Array.IndexOf(colors, color);
+            // TODO? mb add in-game command?
+            int colorIndex = Array.IndexOf(Bot.InGameColors, color);
             if (colorIndex > -1)
             {
                 if (ctx.Member?.VoiceState?.Channel != null)
@@ -172,8 +189,19 @@ namespace Impostor.Plugins.ImpostorCord.Discord
                         if (game.Value.voiceChannel == ctx.Member.VoiceState.Channel)
                         {
                             gameFound = true;
-                            Bot.games[game.Key].players[colorIndex].uid = null;
-                            await ctx.RespondAsync($"Cleared memberdata from {colors[colorIndex]}");
+                            Player player = game.Value.players[colorIndex];
+                            if(player.uid != null)
+                            {
+                                player.uid = null;
+                                await ctx.RespondAsync($"In `{game.Key}` {Bot.EmojiList[colorIndex]}*{Bot.InGameColors[colorIndex]}* is cleared by {ctx.Member.Mention}");
+                                await game.Value.startMessage.ModifyAsync(null, Bot.buildMessage(game.Key, game.Value.voiceChannel.Name, game.Value.players));
+                            }
+                            else
+                            {
+                                await ctx.RespondAsync($"In `{game.Key}` {Bot.EmojiList[colorIndex]}*{Bot.InGameColors[colorIndex]}* is already free");
+                            }
+
+                            ctx.Message.DeleteAsync();
                             break;
                         }
                     }
@@ -209,6 +237,7 @@ namespace Impostor.Plugins.ImpostorCord.Discord
                         game.Value.DeadСanTalkDuringTasks = deadCanTalk;
 
                         await ctx.RespondAsync($"Dead players can talk during tasks in game `{game.Key}` is " + (deadCanTalk ? "*Enabled*" : "*Disabled*"));
+                        // TODO allow change in lobby only; mb add in-game command ?
                         break;
                     }
                 }
@@ -242,7 +271,7 @@ namespace Impostor.Plugins.ImpostorCord.Discord
                         {
                             if (player.uid != null)
                             {
-                                playersString += colors[count] + " = " + player.uid.DisplayName + "\n";
+                                playersString += Bot.InGameColors[count] + " = " + player.uid.DisplayName + "\n";
                             }
                             count++;
                         }

@@ -17,6 +17,11 @@ namespace Impostor.Plugins.ImpostorCord.Discord
         static CommandsNextExtension commands;
         static private WebProxy _proxy;
         public static Config config;
+        public readonly static string[] InGameColors = { "red", "blue", "green", "pink", "orange", "yellow", "black", "white", "purple", "brown", "cyan", "lime" };
+        public readonly static string[] EmojiList = {"🟥", "🇧", "🟩", "💗", "🟧", "🟨", "⬛", "⬜", "🟪", "🟫", "🇨", "✳"};
+        private readonly static DiscordEmbed embedTemplate = new DiscordEmbedBuilder()
+                                .WithDescription("Players, select your in-game color")
+                                .WithColor(new DiscordColor(0xB21010)).Build();
         public Bot(Config _config)
         {
             config=_config;
@@ -67,6 +72,7 @@ namespace Impostor.Plugins.ImpostorCord.Discord
                 System.Console.WriteLine("! Exception in Discord API method");
             }
         }
+
         static async Task MainAsync(string token)
         {
             client = new DiscordClient(new DiscordConfiguration { Token = token, TokenType = TokenType.Bot, Proxy = _proxy });
@@ -74,7 +80,7 @@ namespace Impostor.Plugins.ImpostorCord.Discord
             client.VoiceStateUpdated += async (DiscordClient client, VoiceStateUpdateEventArgs e) => //making sure to disconnect someone from their player when they leave the vc
             {
                 if (e.Before.Channel != e.After.Channel)
-                { 
+                {
                     foreach (KeyValuePair<string, Game> game in games)
                     {
                         if (game.Value.voiceChannel == e.Before.Channel)
@@ -90,6 +96,7 @@ namespace Impostor.Plugins.ImpostorCord.Discord
                                     await MuteDiscordMember(player, false);
                                     player.uid = null;
                                     await startChannel.SendMessageAsync($"{member.Mention} has left");
+                                    break;
                                 }
                             }
                         }
@@ -99,8 +106,76 @@ namespace Impostor.Plugins.ImpostorCord.Discord
             };
 
 
+            client.MessageReactionAdded  += MessageReactionAddedRemoved;
+            client.MessageReactionRemoved += MessageReactionAddedRemoved;
+
             await client.ConnectAsync();
         }
+
+        private static async Task MessageReactionAddedRemoved(DiscordClient s, DiscordEventArgs _e)
+        {
+            (bool added, DiscordMessage Message, DiscordMember User, DiscordEmoji Emoji) e;
+
+            // detect reaction was added or removed
+            if(_e is MessageReactionAddEventArgs _ea)
+            {
+                e = (true, _ea.Message, (DiscordMember)_ea.User, _ea.Emoji);
+            }
+            else if(_e is MessageReactionRemoveEventArgs _er)
+            {
+                e = (false, _er.Message, (DiscordMember)_er.User, _er.Emoji);
+            }
+            else return;
+
+            if(e.Message.Author!=s.CurrentUser
+                || (e.User).IsBot
+                || (e.User).VoiceState.Channel==null
+            )
+                return;
+
+            foreach (var game in games)
+            {
+                if (game.Value.startMessage != e.Message)
+                    continue;
+
+                if ((e.User).VoiceState.Channel != game.Value.voiceChannel)
+                    return;
+
+                //check right emoji
+                int eid;
+                if(-1 == (eid = Array.IndexOf(EmojiList, e.Emoji.Name)))
+                    return;
+
+                var player = game.Value.players[eid];
+                if(e.added)
+                {
+                    if(player.uid==null)
+                        player.uid = e.User; // TODO only 1 color per DiscordMember
+                }
+                else
+                {
+                    if(player.uid == e.User)
+                        player.uid = null;
+                }
+
+                await e.Message.ModifyAsync(null, buildMessage(game.Key, game.Value.voiceChannel.Name, game.Value.players));
+                return;
+            }
+        }
+
+
+        public static DiscordEmbed buildMessage(string code, string vcname, Player[] players)
+        {
+            var embedBuilder = new DiscordEmbedBuilder(embedTemplate).WithAuthor("🚀 "+code).WithTitle("🔊 "+vcname);
+            int i=0;
+            foreach (var player in players)
+            {
+                embedBuilder.AddField(EmojiList[i]+InGameColors[i], player.uid==null ? "-" : player.uid.Mention, true);
+                i++;
+            }
+            return embedBuilder.Build();
+        }
+
         public static async Task Tasks(string code)
         {
             foreach (Player player in games[code].players)
