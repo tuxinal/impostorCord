@@ -25,8 +25,11 @@ namespace Impostor.Plugins.ImpostorCord.Discord
                         if (game.Value.voiceChannel == ctx.Member.VoiceState.Channel)
                         {
                             gameFound = true;
-                            Bot.games[game.Key].players[colorIndex].uid = ctx.Member;
-                            await ctx.RespondAsync($"{ctx.Member.Mention} is joined as *{Bot.InGameColors[colorIndex]}*");
+                            game.Value.players[colorIndex].uid = ctx.Member;
+
+                            await ctx.RespondAsync($"{ctx.Member.Mention} joined `{game.Key}` as {Bot.EmojiList[colorIndex]}*{Bot.InGameColors[colorIndex]}* himself");
+                            await game.Value.startMessage.ModifyAsync(null, Bot.buildMessage(game.Key, game.Value.voiceChannel.Name, game.Value.players));
+                            ctx.Message.DeleteAsync();
                             break;
                         }
                     }
@@ -62,6 +65,7 @@ namespace Impostor.Plugins.ImpostorCord.Discord
                             game.voiceChannel = ctx.Member.VoiceState.Channel;
                             game.gameStartingChannel = ctx.Channel;
 
+                            ctx.Message.DeleteAsync();
                             game.startMessage = await ctx.RespondAsync(null, false, Bot.buildMessage(code, game.voiceChannel.Name, game.players));
 
                             foreach(var emoji in Bot.EmojiList)
@@ -106,7 +110,8 @@ namespace Impostor.Plugins.ImpostorCord.Discord
                             game.voiceChannel = null;
                             await game.startMessage.DeleteAsync();
                             game.startMessage = null;
-                            await ctx.RespondAsync($"ended game {code}");
+                            await ctx.RespondAsync($"ended game `{code}` by {ctx.Member.Mention}");
+                            ctx.Message.DeleteAsync();
                         }
                         else
                         {
@@ -144,8 +149,11 @@ namespace Impostor.Plugins.ImpostorCord.Discord
                         if (game.Value.voiceChannel == member.VoiceState.Channel)
                         {
                             gameFound = true;
-                            Bot.games[game.Key].players[colorIndex].uid = member;
-                            await ctx.RespondAsync($"{member.Mention} is joined as {Bot.InGameColors[colorIndex]}");
+                            game.Value.players[colorIndex].uid = member;
+
+                            await ctx.RespondAsync($"{member.Mention} joined `{game.Key}` as {Bot.EmojiList[colorIndex]}*{Bot.InGameColors[colorIndex]}* by {ctx.Member.Mention}");
+                            await game.Value.startMessage.ModifyAsync(null, Bot.buildMessage(game.Key, game.Value.voiceChannel.Name, game.Value.players));
+                            ctx.Message.DeleteAsync();
                             break;
                         }
                     }
@@ -169,6 +177,7 @@ namespace Impostor.Plugins.ImpostorCord.Discord
         [Description("clear specified color's member information")]
         public async Task kick(CommandContext ctx, string color)
         {
+            // TODO? mb add in-game command?
             int colorIndex = Array.IndexOf(Bot.InGameColors, color);
             if (colorIndex > -1)
             {
@@ -180,8 +189,19 @@ namespace Impostor.Plugins.ImpostorCord.Discord
                         if (game.Value.voiceChannel == ctx.Member.VoiceState.Channel)
                         {
                             gameFound = true;
-                            Bot.games[game.Key].players[colorIndex].uid = null;
-                            await ctx.RespondAsync($"Cleared memberdata from {Bot.InGameColors[colorIndex]}");
+                            Player player = game.Value.players[colorIndex];
+                            if(player.uid != null)
+                            {
+                                player.uid = null;
+                                await ctx.RespondAsync($"In `{game.Key}` {Bot.EmojiList[colorIndex]}*{Bot.InGameColors[colorIndex]}* is cleared by {ctx.Member.Mention}");
+                                await game.Value.startMessage.ModifyAsync(null, Bot.buildMessage(game.Key, game.Value.voiceChannel.Name, game.Value.players));
+                            }
+                            else
+                            {
+                                await ctx.RespondAsync($"In `{game.Key}` {Bot.EmojiList[colorIndex]}*{Bot.InGameColors[colorIndex]}* is already free");
+                            }
+
+                            ctx.Message.DeleteAsync();
                             break;
                         }
                     }
@@ -217,7 +237,7 @@ namespace Impostor.Plugins.ImpostorCord.Discord
                         game.Value.DeadСanTalkDuringTasks = deadCanTalk;
 
                         await ctx.RespondAsync($"Dead players can talk during tasks in game `{game.Key}` is " + (deadCanTalk ? "*Enabled*" : "*Disabled*"));
-                        // TODO allow change in lobby only
+                        // TODO allow change in lobby only; mb add in-game command ?
                         break;
                     }
                 }
