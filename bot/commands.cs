@@ -29,7 +29,6 @@ namespace Impostor.Plugins.ImpostorCord.Discord
 
                             await ctx.RespondAsync($"{ctx.Member.Mention} joined `{game.Key}` as {Bot.EmojiList[colorIndex]}*{Bot.InGameColors[colorIndex]}* himself");
                             await game.Value.startMessage.ModifyAsync(null, Bot.buildMessage(game.Key, game.Value.voiceChannel.Name, game.Value.players));
-                            ctx.Message.DeleteAsync();
                             break;
                         }
                     }
@@ -66,7 +65,6 @@ namespace Impostor.Plugins.ImpostorCord.Discord
                             game.voiceChannel = ctx.Member.VoiceState.Channel;
                             game.gameStartingChannel = ctx.Channel;
 
-                            ctx.Message.DeleteAsync();
                             game.startMessage = await ctx.RespondAsync(null, false, Bot.buildMessage(code, game.voiceChannel.Name, game.players));
 
                             foreach(var emoji in Bot.EmojiList)
@@ -112,7 +110,6 @@ namespace Impostor.Plugins.ImpostorCord.Discord
                             await game.startMessage.DeleteAsync();
                             game.startMessage = null;
                             await ctx.RespondAsync($"ended game `{code}` by {ctx.Member.Mention}");
-                            ctx.Message.DeleteAsync();
                         }
                         else
                         {
@@ -154,7 +151,6 @@ namespace Impostor.Plugins.ImpostorCord.Discord
 
                             await ctx.RespondAsync($"{member.Mention} joined `{game.Key}` as {Bot.EmojiList[colorIndex]}*{Bot.InGameColors[colorIndex]}* by {ctx.Member.Mention}");
                             await game.Value.startMessage.ModifyAsync(null, Bot.buildMessage(game.Key, game.Value.voiceChannel.Name, game.Value.players));
-                            ctx.Message.DeleteAsync();
                             break;
                         }
                     }
@@ -202,7 +198,6 @@ namespace Impostor.Plugins.ImpostorCord.Discord
                                 await ctx.RespondAsync($"In `{game.Key}` {Bot.EmojiList[colorIndex]}*{Bot.InGameColors[colorIndex]}* is already free");
                             }
 
-                            ctx.Message.DeleteAsync();
                             break;
                         }
                     }
