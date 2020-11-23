@@ -18,7 +18,7 @@ namespace Impostor.Plugins.ImpostorCord.Discord
         static private WebProxy _proxy;
         public static Config config;
         public readonly static string[] InGameColors = { "red", "blue", "green", "pink", "orange", "yellow", "black", "white", "purple", "brown", "cyan", "lime" };
-        public readonly static string[] EmojiList = {"🟥", "🇧", "🟩", "💗", "🟧", "🟨", "⬛", "⬜", "🟪", "🟫", "🇨", "✳"};
+        public static DiscordEmoji[] EmojiList = new DiscordEmoji[12];
         private readonly static DiscordEmbed embedTemplate = new DiscordEmbedBuilder()
                                 .WithDescription("Players, select your in-game color")
                                 .WithColor(new DiscordColor(0xB21010)).Build();
@@ -76,6 +76,19 @@ namespace Impostor.Plugins.ImpostorCord.Discord
         static async Task MainAsync(string token)
         {
             client = new DiscordClient(new DiscordConfiguration { Token = token, TokenType = TokenType.Bot, Proxy = _proxy });
+
+            EmojiList.SetValue(DiscordEmoji.FromUnicode("🟥"), 0);
+            EmojiList.SetValue(DiscordEmoji.FromUnicode("🇧"), 1);
+            EmojiList.SetValue(DiscordEmoji.FromUnicode("🟩"), 2);
+            EmojiList.SetValue(DiscordEmoji.FromUnicode("💗"), 3);
+            EmojiList.SetValue(DiscordEmoji.FromUnicode("🟧"), 4);
+            EmojiList.SetValue(DiscordEmoji.FromUnicode("🟨"), 5);
+            EmojiList.SetValue(DiscordEmoji.FromUnicode("⬛"), 6);
+            EmojiList.SetValue(DiscordEmoji.FromUnicode("⬜"), 7);
+            EmojiList.SetValue(DiscordEmoji.FromUnicode("🟪"), 8);
+            EmojiList.SetValue(DiscordEmoji.FromUnicode("🟫"), 9);
+            EmojiList.SetValue(DiscordEmoji.FromUnicode("🇨"), 10);
+            EmojiList.SetValue(DiscordEmoji.FromUnicode("✳"), 11);
 
             client.VoiceStateUpdated += async (DiscordClient client, VoiceStateUpdateEventArgs e) => //making sure to disconnect someone from their player when they leave the vc
             {
@@ -143,7 +156,7 @@ namespace Impostor.Plugins.ImpostorCord.Discord
 
                 //check right emoji
                 int eid;
-                if(-1 == (eid = Array.IndexOf(EmojiList, e.Emoji.Name)))
+                if(-1 == (eid = Array.IndexOf(EmojiList, e.Emoji)))
                     return;
 
                 var player = game.Value.players[eid];
