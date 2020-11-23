@@ -62,6 +62,7 @@ namespace Impostor.Plugins.ImpostorCord.Discord
                         var game = Bot.games[code];
                         if (game.noVC())
                         {
+                            setEmojis(ctx.Guild);
                             game.voiceChannel = ctx.Member.VoiceState.Channel;
                             game.gameStartingChannel = ctx.Channel;
 
@@ -70,7 +71,7 @@ namespace Impostor.Plugins.ImpostorCord.Discord
 
                             foreach(var emoji in Bot.EmojiList)
                             {
-                                await game.startMessage.CreateReactionAsync(DiscordEmoji.FromUnicode(emoji));
+                                await game.startMessage.CreateReactionAsync(emoji);
                             }
                         }
                         else
@@ -294,6 +295,17 @@ namespace Impostor.Plugins.ImpostorCord.Discord
             else
             {
                 await ctx.RespondAsync("You need to be in a voice channel");
+            }
+        }
+        private void setEmojis(DiscordGuild guild){
+            int i = 0;
+            foreach(string color in Bot.InGameColors){
+                foreach(DiscordEmoji emoji in guild.Emojis.Values){
+                    if(emoji.Name == color){
+                        Bot.EmojiList.SetValue(emoji, i);
+                    }
+                }
+                i++;
             }
         }
     }
