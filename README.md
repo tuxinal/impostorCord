@@ -28,6 +28,8 @@ after doing all of those open `config.impostorCord.json` and put your bot token 
 
 after all of that you should be able to start the server by opening Impostor.Server(.exe)
 
+you can also optionally add all of the emojis in [emojis.zip](emojis.zip)
+
 ## Commands
 
 | command   | alias | syntax                                  | usage                                                                              |
