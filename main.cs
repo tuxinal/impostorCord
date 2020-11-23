@@ -56,6 +56,8 @@ namespace Impostor.Plugins.ImpostorCord
 
         [JsonPropertyName("deadСanTalkDuringTasks")]
         public bool DeadСanTalkDuringTasks { get; set; }
+        [JsonPropertyName("removeCommands")]
+        public bool removeCommands { get; set; }
 
     }
 }
