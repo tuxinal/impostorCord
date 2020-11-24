@@ -108,6 +108,7 @@ namespace Impostor.Plugins.ImpostorCord.Discord
                                     player.isDead = false;
                                     await MuteDiscordMember(player, false);
                                     player.uid = null;
+                                    await game.Value.startMessage.ModifyAsync(null, Bot.buildMessage(game.Key, game.Value.voiceChannel.Name, game.Value.players));
                                     await startChannel.SendMessageAsync($"{member.Mention} has left");
                                     break;
                                 }
