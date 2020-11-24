@@ -113,6 +113,9 @@ namespace Impostor.Plugins.ImpostorCord.Discord
                         var game = Bot.games[code];
                         if (game.voiceChannel == ctx.Member.VoiceState.Channel)
                         {
+                            foreach(Player player in Bot.games[code].players){
+                                player.uid = null;
+                            }
                             game.voiceChannel = null;
                             await game.startMessage.DeleteAsync();
                             game.startMessage = null;
