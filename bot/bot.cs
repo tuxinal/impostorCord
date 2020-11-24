@@ -196,7 +196,17 @@ namespace Impostor.Plugins.ImpostorCord.Discord
             }
             return embedBuilder.Build();
         }
-
+        public static DiscordEmbed playerBuildMessage(string code)
+        {
+            var embedBuilder = new DiscordEmbedBuilder(embedTemplate).WithDescription("").WithTitle("Players:");
+            int i=0;
+            foreach (var player in games[code].players)
+            {
+                embedBuilder.AddField(EmojiList[i]+InGameColors[i], player.uid==null ? "-" : player.uid.Mention, true);
+                i++;
+            }
+            return embedBuilder.Build();
+        }
         public static async Task Tasks(string code)
         {
             foreach (Player player in games[code].players)

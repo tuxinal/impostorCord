@@ -4,6 +4,7 @@ using DSharpPlus.CommandsNext;
 using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Impostor.Plugins.ImpostorCord.Discord
 {
@@ -283,24 +284,7 @@ namespace Impostor.Plugins.ImpostorCord.Discord
                     if (game.Value.voiceChannel == ctx.Member.VoiceState.Channel)
                     {
                         gameFound = true;
-                        string playersString = "";
-                        int count = 0;
-                        foreach (Player player in game.Value.players)
-                        {
-                            if (player.uid != null)
-                            {
-                                playersString += Bot.InGameColors[count] + " = " + player.uid.DisplayName + "\n";
-                            }
-                            count++;
-                        }
-                        if (playersString != "")
-                        {
-                            await ctx.RespondAsync($"```{playersString}```");
-                        }
-                        else
-                        {
-                            await ctx.RespondAsync("There are no players in that game");
-                        }
+                        await ctx.RespondAsync(null,false,Bot.playerBuildMessage(game.Key));
                         if(Bot.config.removeCommands){
                             ctx.Message.DeleteAsync();
                         }
