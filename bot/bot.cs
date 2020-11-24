@@ -114,7 +114,7 @@ namespace Impostor.Plugins.ImpostorCord.Discord
                                     break;
                                 }
                             }
-                            if(e.Before.Channel.Users.Count() == 0){
+                            if(game.Value.voiceChannel.Users.Count() == 0){
                                 game.Value.voiceChannel = null;
                                 await game.Value.startMessage.DeleteAsync();
                                 game.Value.startMessage = null;
