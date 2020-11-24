@@ -111,7 +111,7 @@ namespace Impostor.Plugins.ImpostorCord.Discord
                                     player.uid = null;
                                     await game.Value.startMessage.ModifyAsync(null, Bot.buildMessage(game.Key, game.Value.voiceChannel.Name, game.Value.players));
                                     await startChannel.SendMessageAsync($"{member.Mention} has left");
-                                    if(e.After.Channel.Users.Count() == 0){
+                                    if(e.Before.Channel.Users.Count() == 0){
                                         game.Value.voiceChannel = null;
                                         await game.Value.startMessage.DeleteAsync();
                                         game.Value.startMessage = null;
