@@ -111,15 +111,16 @@ namespace Impostor.Plugins.ImpostorCord.Discord
                                     player.uid = null;
                                     await game.Value.startMessage.ModifyAsync(null, Bot.buildMessage(game.Key, game.Value.voiceChannel.Name, game.Value.players));
                                     await startChannel.SendMessageAsync($"{member.Mention} has left");
-                                    if(e.Before.Channel.Users.Count() == 0){
-                                        game.Value.voiceChannel = null;
-                                        await game.Value.startMessage.DeleteAsync();
-                                        game.Value.startMessage = null;
-                                        await game.Value.gameStartingChannel.SendMessageAsync($"ended game because there is no members left in the vc");
-                                    }
                                     break;
                                 }
                             }
+                            if(e.Before.Channel.Users.Count() == 0){
+                                game.Value.voiceChannel = null;
+                                await game.Value.startMessage.DeleteAsync();
+                                game.Value.startMessage = null;
+                                await game.Value.gameStartingChannel.SendMessageAsync($"ended game because there is no members left in the vc");
+                            }
+                            break;
                         }
                     }
                 }
