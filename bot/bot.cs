@@ -45,27 +45,25 @@ namespace Impostor.Plugins.ImpostorCord.Discord
         static async Task MuteDiscordMember(Player player, bool needMute)
         {
             if(player.uid == null) return;
+
+            var needDeaf = false;
             try
             {
                 if(player.game.DeadСanTalkDuringTasks)
                 {
                     needMute ^= player.isDead; // mute dead + unmute alive or vice versa
-                    var needDeaf = !player.isDead & needMute; // deaf only alive
-                    if(needDeaf != player.isDeaf)
-                    {
-                        player.isDeaf = needDeaf;
-                        await player.uid.SetDeafAsync(needDeaf);
-                    }
+                    needDeaf = !player.isDead & needMute; // deaf only alive
                 }
                 else
                 {
                     needMute |= player.isDead; // mute all ; unmute only alive
                 }
 
-                if(needMute != player.isMute)
+                if(needMute != player.isMute || needDeaf != player.isDeaf)
                 {
                     player.isMute = needMute;
-                    await player.uid.SetMuteAsync(needMute);
+                    player.isDeaf = needDeaf;
+                    await player.uid.ModifyAsync(m => { m.Muted = needMute; m.Deafened = needDeaf; });
                 }
 
             } catch
