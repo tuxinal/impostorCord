@@ -62,7 +62,7 @@ namespace Impostor.Plugins.ImpostorCord.Discord
                     try
                     {
                         var game = Bot.games[code];
-                        if (game.noVC())
+                        if (game.voiceChannel == null)
                         {
                             setEmojis(ctx.Guild);
                             game.voiceChannel = ctx.Member.VoiceState.Channel;

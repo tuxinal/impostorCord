@@ -8,17 +8,6 @@ namespace Impostor.Plugins.ImpostorCord.Discord
         public DiscordChannel voiceChannel;
         public DiscordMessage startMessage;
         public Player[] players;
-        public bool noVC()
-        {
-            if (voiceChannel == null)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
         public bool DeadСanTalkDuringTasks = true;
 
         public Game(){
