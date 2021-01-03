@@ -22,7 +22,7 @@ jobs:
       - name: Test
         run: dotnet test --no-build --verbosity normal
       - name: zip dlls
-        run: (cd bin/Release/net5.0/ && zip libraries.zip $(find . -name \*.dll ! -name ImposterCord.dll ! -name Impostor.Api.dll)) && mv bin/Release/net5.0/libraries.zip .
+        run: (cd bin/Release/net5.0/ && zip libraries.zip $(find . -name \*.dll ! -name ImpostorCord.dll ! -name Impostor.Api.dll -maxdepth 0 -type f)) && mv bin/Release/net5.0/libraries.zip .
       - uses: actions/upload-artifact@v2
         with:
           name: artifacts
@@ -39,6 +39,7 @@ jobs:
         with:
           tag: continous-integration
           token: ${{ secrets.ACCESS_TOKEN }}
+          rm: true
           files: |
             bin/Release/net5.0/ImpostorCord.dll
             libraries.zip
