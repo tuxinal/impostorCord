@@ -21,17 +21,24 @@ jobs:
         run: dotnet build --no-restore --configuration Release
       - name: Test
         run: dotnet test --no-build --verbosity normal
+      - name: zip dlls
+        run: zip $(cd bin/Release/net5.0 && find . -name *.dll ! -name ImposterCord.dll -name Impostor.Api.dll) libraries.zip
       - uses: actions/upload-artifact@v2
         with:
           name: artifacts
           path: bin/
       - uses: actions/upload-artifact@v2
         with:
-          name: dll
+          name: libraries
+          path: libraries.zip
+      - uses: actions/upload-artifact@v2
+        with:
+          name: plugin
           path: bin/Release/net5.0/ImpostorCord.dll
       - uses: eine/tip@master
         with:
           tag: continous-integration
           token: ${{ secrets.ACCESS_TOKEN }}
           files: |
-            bin/Release/net5.0/*.dll
+            bin/Release/net5.0/ImpostorCord.dll
+            libraries.zip
