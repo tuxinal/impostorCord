@@ -34,5 +34,4 @@ jobs:
           tag: continous-integration
           token: ${{ secrets.ACCESS_TOKEN }}
           files: |
-            bin/Release/net5.0/ImpostorCord.dll
             bin/Release/net5.0/*.dll
