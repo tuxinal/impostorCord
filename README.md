@@ -31,6 +31,9 @@ after all of that you should be able to start the server by opening Impostor.Ser
 you can also optionally add all of the emojis in [emojis.zip](emojis.zip)
 
 ## Commands
+After successful installation, your bot should come online in Discord. Giving the right permissions (see above) you can now use the following commands in a text channel on your Discord server.
+
+**These commands are prefixed with a semicolon (;)**
 
 | command   | alias | syntax                                  | usage                                                                              |
 |-----------|-------|-----------------------------------------|------------------------------------------------------------------------------------|
